@@ -1,37 +1,35 @@
-const path = require("path");
-const HtmlWebPackPlugin = require("html-webpack-plugin");
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const path = require('path');
 
 module.exports = {
-  entry: path.join(__dirname, "/app/index.js"),
+  entry: './src/index.js',
+  output: {
+    filename: 'main.js',
+    path: path.resolve(__dirname, 'build'),
+  },
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: path.join(__dirname, 'public', 'index.html'),
+    }),
+  ],
+  devServer: {
+    static: {
+      directory: path.join(__dirname, 'build'),
+    },
+    port: 3000,
+    open: true
+  },
   module: {
     rules: [
       {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
-        use: {
-          loader: "babel-loader"
-        }
+        use: ['babel-loader'],
       },
-      {
-        test: /\.html$/,
-        use: [
-          {
-            loader: "html-loader"
-          }
-        ]
-      },
-      {
-        test: /\.(s*)css$/,
-        use: ['style-loader', 'css-loader', 'sass-loader']
-      }
-    ]
+    ],
   },
-  plugins: [
-    new HtmlWebPackPlugin({
-      template: path.join(__dirname, "/app/index.html")
-    })
-  ],
-  devServer: {
-    //port: <your port here>
-  }
+  //passing all js and jsx files through babel
+  resolve: {
+    extensions: ['*', '.js', '.jsx'],
+  },
 };
